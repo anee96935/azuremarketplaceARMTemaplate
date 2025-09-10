@@ -1,0 +1,155 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+  "handler": "Microsoft.Azure.CreateUIDef",
+  "version": "0.1.2-preview",
+  "parameters": {
+    "basics": [
+      {
+        "name": "vmName",
+        "type": "Microsoft.Common.TextBox",
+        "label": "Virtual Machine Name",
+        "defaultValue": "athena-vm",
+        "toolTip": "Enter the name for the virtual machine.",
+        "constraints": {
+          "required": true,
+          "regex": "^[a-z0-9A-Z-]{3,15}$",
+          "validationMessage": "VM name must be 3-15 characters long and contain only letters, numbers, and hyphens."
+        }
+      },
+      {
+        "name": "adminUsername",
+        "type": "Microsoft.Common.TextBox",
+        "label": "Admin Username",
+        "defaultValue": "azureuser",
+        "toolTip": "Enter the administrator username for the VM.",
+        "constraints": {
+          "required": true,
+          "regex": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$",
+          "validationMessage": "Username must start with a letter and can contain letters, numbers, hyphens, and underscores. Maximum 64 characters."
+        }
+      },
+      {
+        "name": "authenticationType",
+        "type": "Microsoft.Common.OptionsGroup",
+        "label": "Authentication type",
+        "defaultValue": "SSH public key",
+        "toolTip": "Choose authentication type for the VM.",
+        "constraints": {
+          "allowedValues": [
+            {
+              "label": "SSH public key",
+              "value": "sshPublicKey"
+            },
+            {
+              "label": "Password",
+              "value": "password"
+            }
+          ],
+          "required": true
+        }
+      },
+      {
+        "name": "adminPasswordOrKey",
+        "type": "Microsoft.Common.PasswordBox",
+        "label": {
+          "authenticationType": "Password",
+          "sshPublicKey": "SSH public key"
+        },
+        "toolTip": {
+          "authenticationType": "Enter the administrator password for the VM.",
+          "sshPublicKey": "Enter the SSH public key for the VM."
+        },
+        "constraints": {
+          "required": true
+        },
+        "options": {
+          "hideConfirmation": "[equals(basics('authenticationType'), 'sshPublicKey')]"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "name": "vmSettings",
+        "label": "VM Settings",
+        "elements": [
+          {
+            "name": "vmSize",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Virtual machine size",
+            "defaultValue": "Standard_B2s",
+            "toolTip": "Select the size of the virtual machine.",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "Standard_B1s",
+                  "value": "Standard_B1s"
+                },
+                {
+                  "label": "Standard_B2s",
+                  "value": "Standard_B2s"
+                },
+                {
+                  "label": "Standard_D2s_v3",
+                  "value": "Standard_D2s_v3"
+                }
+              ],
+              "required": true
+            }
+          }
+        ]
+      },
+      {
+        "name": "applicationSettings",
+        "label": "Application Settings",
+        "elements": [
+          {
+            "name": "brandName",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Brand Name",
+            "defaultValue": "MyBrand",
+            "toolTip": "Enter the brand name for the application setup.",
+            "constraints": {
+              "required": true,
+              "regex": "^[a-zA-Z0-9][a-zA-Z0-9\\s_-]{0,49}$",
+              "validationMessage": "Brand name must start with alphanumeric character and can contain letters, numbers, spaces, hyphens, and underscores. Maximum 50 characters."
+            }
+          },
+          {
+            "name": "username",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Application Username",
+            "defaultValue": "appuser",
+            "toolTip": "Enter the username for the application setup.",
+            "constraints": {
+              "required": true,
+              "regex": "^[a-zA-Z][a-zA-Z0-9_-]{0,49}$",
+              "validationMessage": "Username must start with a letter and can contain letters, numbers, hyphens, and underscores. Maximum 50 characters."
+            }
+          },
+          {
+            "name": "password",
+            "type": "Microsoft.Common.PasswordBox",
+            "label": "Application Password",
+            "toolTip": "Enter the password for the application setup.",
+            "constraints": {
+              "required": true,
+              "regex": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d@$!%*?&]{8,}$",
+              "validationMessage": "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number."
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "location": "[location()]",
+      "vmName": "[basics('vmName')]",
+      "adminUsername": "[basics('adminUsername')]",
+      "authenticationType": "[basics('authenticationType')]",
+      "adminPasswordOrKey": "[basics('adminPasswordOrKey')]",
+      "vmSize": "[steps('vmSettings').vmSize]",
+      "brandName": "[steps('applicationSettings').brandName]",
+      "username": "[steps('applicationSettings').username]",
+      "password": "[steps('applicationSettings').password]"
+    }
+  }
+}
