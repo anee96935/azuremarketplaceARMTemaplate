@@ -236,7 +236,7 @@
         },
         "storageProfile": {
           "imageReference": {
-            "id": "[concat(subscription().id, '/resourceGroups/', 'Athena-dev', '/providers/Microsoft.Compute/galleries/', 'athenacomputegallery12082025', '/images/', 'athena-compute-gallery-12082025-definition', '/versions/1.0.2')]"
+            "id": "[concat(subscription().id, '/resourceGroups/', 'Athena-dev', '/providers/Microsoft.Compute/galleries/', 'athenacomputegallery22092025', '/images/', 'athena-compute-gallery-22092025-definition', '/versions/1.0.0')]"
           },
           "osDisk": {
             "createOption": "FromImage",
